@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\Uuids;
+use App\Role;
 
 class User extends Authenticatable
 {
@@ -17,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'username', 'email', 'phone_no', 'password', 'role_id'
     ];
 
     /**
@@ -37,4 +38,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function isEmailVerified(){
+        if($this->email_verified_at) {
+            return true;
+        }
+        return false;
+    }
+    
+    public function isAdmin(){
+        $isAdmin = Role::where('id', $this->role_id)->first()->role_name;
+        if($isAdmin === 'admin') {
+            return true;
+        }
+        return false;
+    }
 }
