@@ -1,14 +1,15 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\Uuids;
-use App\Role;
+use App\Models\Role;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable, Uuids;
 
@@ -18,7 +19,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'email', 'phone_no', 'password', 'role_id'
+        'username',
+        'email',
+        // 'phone_no',
+        // 'password',
+        'role_id'
     ];
 
     /**
@@ -52,5 +57,16 @@ class User extends Authenticatable
             return true;
         }
         return false;
+    }
+
+    
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

@@ -16,14 +16,14 @@ Route::get('/', function () {
 });
 
 
-Route::middleware(['auth', 'verifiedEmail'])->group(function(){
-    Route::get('/route-1', 'MainController@route1');
+// Route::middleware(['auth', 'verifiedEmail'])->group(function(){
+//     Route::get('/route-1', 'MainController@route1');
 
-    Route::middleware(['verifiedAdmin'])->group(function(){
-        Route::get('/route-2', 'MainController@route2');
-    });
-});
+//     Route::middleware(['verifiedAdmin'])->group(function(){
+//         Route::get('/route-2', 'MainController@route2');
+//     });
+// });
 
-Auth::routes();
+// Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
