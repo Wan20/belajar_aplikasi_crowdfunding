@@ -18,6 +18,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        'App\Events\UserRegisteredEvent' => [
+            'App\Listeners\SendEmailNotificationUserRegistered',
+        ],
+        'App\Events\ResendOTPRegisteredEvent' => [
+            'App\Listeners\SendEmailResendOTPUserRegistered',
+        ]
     ];
 
     /**

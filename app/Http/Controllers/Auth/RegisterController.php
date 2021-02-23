@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\Otp;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use App\Events\UserRegisteredEvent;
 
 class RegisterController extends Controller
 {
@@ -64,13 +65,16 @@ class RegisterController extends Controller
         $newDateTime = $currentDateTime->addMinute(5);;
 
         // Create OTP
-        Otp::create([
+        $otp = Otp::create([
             'otp_code' => $otpcode,
             'valid_until' => $newDateTime,
             'user_id' =>  $user->id,
             'is_active' => true
         ]);
 
+        // Event Kirim Email OTP
+        event(new UserRegisteredEvent($user, $otp));
+        
         return response()->json([
             'response_code' => '00',
             'response_message' => 'silahkan cek email',

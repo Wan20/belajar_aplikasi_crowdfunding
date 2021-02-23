@@ -59,6 +59,7 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
+        // validation
         $validator = Validator::make($request->all(), 
         [
             'image' => 'required|image:jpeg,png,jpg,gif,svg|max:2048',
@@ -99,13 +100,7 @@ class ProfileController extends Controller
             }
             $user->updated_at = Carbon::now();
             $user->save();
-               
-            // return response()->json([
-            //     "success" => true,
-            //     "message" => "File successfully uploaded",
-            //     "file" => $user
-            // ]);
-   
+                  
             return response()->json([
                 'response_code' => '00',
                 'response_message' => 'Profile Berhasil di update',

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Otp;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use App\Events\ResendOTPRegisteredEvent;
 
 class RegenerateOTPController extends Controller
 {
@@ -66,10 +67,13 @@ class RegenerateOTPController extends Controller
         $otp->valid_until = $newDateTime;
         $otp->updated_at = $currentDateTime;
         $otp->save();
-        
+
+        // Event Resend Email OTP
+        event(new ResendOTPRegisteredEvent($user, $otp));
+
         return response()->json([
             'response_code' => '00',
-            'response_message' => 'Berhasil terverifikasi',
+            'response_message' => 'Generate OTP Berhasil',
             'data' => [
                 "user" => new RegenerateOTPResource($user)
             ]
