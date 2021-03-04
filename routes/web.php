@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('app');
+// });
 
 
 // Route::middleware(['auth', 'verifiedEmail'])->group(function(){
@@ -26,4 +26,6 @@ Route::get('/', function () {
 
 // Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
+
+Route::view('/{any?}', 'app')->where('any','.*');
