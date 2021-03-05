@@ -24,6 +24,11 @@ const router = new Router({
             component: () => import('./views/Blogs.vue')
         },
         {
+            path: '/campaigns',
+            name: 'campaigns',
+            component: () => import('./views/Campaigns.vue')
+        },
+        {
             path: '*',
             redirect: '/'
         }
