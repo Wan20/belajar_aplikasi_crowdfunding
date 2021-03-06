@@ -2173,6 +2173,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'App',
   data: function data() {
@@ -2189,6 +2207,11 @@ __webpack_require__.r(__webpack_exports__);
       }],
       guest: false
     };
+  },
+  computed: {
+    isHome: function isHome() {
+      return this.$route.path === '/' || this.$route.path === '/home';
+    }
   }
 });
 
@@ -3441,63 +3464,117 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c(
-        "v-app-bar",
-        { attrs: { app: "", color: "success", dark: "" } },
-        [
-          _c("v-app-bar-nav-icon", {
-            on: {
-              click: function($event) {
-                $event.stopPropagation()
-                _vm.drawer = !_vm.drawer
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("v-toolbar-title", [_vm._v("SanbercodeApp")]),
-          _vm._v(" "),
-          _c("v-spacer"),
-          _vm._v(" "),
-          _c(
-            "v-btn",
-            { attrs: { icon: "" } },
+      _vm.isHome
+        ? _c(
+            "v-app-bar",
+            { attrs: { app: "", color: "success", dark: "" } },
+            [
+              _c("v-app-bar-nav-icon", {
+                on: {
+                  click: function($event) {
+                    $event.stopPropagation()
+                    _vm.drawer = !_vm.drawer
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("v-toolbar-title", [_vm._v("SanbercodeApp")]),
+              _vm._v(" "),
+              _c("v-spacer"),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                { attrs: { icon: "" } },
+                [
+                  _c(
+                    "v-badge",
+                    {
+                      attrs: { color: "orange", overlap: "" },
+                      scopedSlots: _vm._u(
+                        [
+                          {
+                            key: "badge",
+                            fn: function() {
+                              return [_c("span", [_vm._v("3")])]
+                            },
+                            proxy: true
+                          }
+                        ],
+                        null,
+                        false,
+                        3881307536
+                      )
+                    },
+                    [_vm._v(" "), _c("v-icon", [_vm._v("mdi-cash-multiple")])],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("v-text-field", {
+                attrs: {
+                  slot: "extension",
+                  "hide-details": "",
+                  "append-icon": "mdi-microphone",
+                  flat: "",
+                  label: "Search",
+                  "prepend-inner-icon": "mdi-magnify",
+                  "solo-inverted": ""
+                },
+                slot: "extension"
+              })
+            ],
+            1
+          )
+        : _c(
+            "v-app-bar",
+            { attrs: { app: "", color: "success", dark: "" } },
             [
               _c(
-                "v-badge",
+                "v-btn",
                 {
-                  attrs: { color: "orange", overlap: "" },
-                  scopedSlots: _vm._u([
-                    {
-                      key: "badge",
-                      fn: function() {
-                        return [_c("span", [_vm._v("3")])]
-                      },
-                      proxy: true
+                  attrs: { icon: "" },
+                  on: {
+                    click: function($event) {
+                      $event.stopPropagation()
+                      return _vm.$router.go(-1)
                     }
-                  ])
+                  }
                 },
-                [_vm._v(" "), _c("v-icon", [_vm._v("mdi-cash-multiple")])],
+                [_c("v-icon", [_vm._v("mdi-arrow-left-circle")])],
+                1
+              ),
+              _vm._v(" "),
+              _c("v-spacer"),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                { attrs: { icon: "" } },
+                [
+                  _c(
+                    "v-badge",
+                    {
+                      attrs: { color: "orange", overlap: "" },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "badge",
+                          fn: function() {
+                            return [_c("span", [_vm._v("3")])]
+                          },
+                          proxy: true
+                        }
+                      ])
+                    },
+                    [_vm._v(" "), _c("v-icon", [_vm._v("mdi-cash-multiple")])],
+                    1
+                  )
+                ],
                 1
               )
             ],
             1
           ),
-          _vm._v(" "),
-          _c("v-text-field", {
-            attrs: {
-              slot: "extension",
-              "hide-details": "",
-              "append-icon": "mdi-microphone",
-              flat: "",
-              label: "Search",
-              "prepend-inner-icon": "mdi-magnify",
-              "solo-inverted": ""
-            },
-            slot: "extension"
-          })
-        ],
-        1
-      ),
       _vm._v(" "),
       _c(
         "v-main",
@@ -63834,13 +63911,13 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     name: 'home',
     alias: '/home',
     component: function component() {
-      return __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.bind(null, /*! ./views/Home.vue */ "./resources/js/views/Home.vue"));
+      return __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.bind(null, /*! ./views/Home.vue */ "./resources/js/views/Home.vue"));
     }
   }, {
     path: '/donations',
     name: 'donations',
     component: function component() {
-      return __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*! ./views/Donations.vue */ "./resources/js/views/Donations.vue"));
+      return __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.bind(null, /*! ./views/Donations.vue */ "./resources/js/views/Donations.vue"));
     }
   }, {
     path: '/blogs',
@@ -63852,7 +63929,13 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     path: '/campaigns',
     name: 'campaigns',
     component: function component() {
-      return __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.bind(null, /*! ./views/Campaigns.vue */ "./resources/js/views/Campaigns.vue"));
+      return __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*! ./views/Campaigns.vue */ "./resources/js/views/Campaigns.vue"));
+    }
+  }, {
+    path: '/campaign/:id',
+    name: 'campaign',
+    component: function component() {
+      return __webpack_require__.e(/*! import() */ 4).then(__webpack_require__.bind(null, /*! ./views/Campaign.vue */ "./resources/js/views/Campaign.vue"));
     }
   }, {
     path: '*',
