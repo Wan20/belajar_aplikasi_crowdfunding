@@ -58,13 +58,16 @@
         <!-- Pemisah konten -->
         <v-spacer></v-spacer>
 
-        <v-btn icon>
+        <v-btn icon v-if="counted > 0">
             <v-badge color="orange" overlap>
                 <template v-slot:badge>
-                    <span>3</span>
+                    <span>{{ counted }}</span>
                 </template>
                 <v-icon>mdi-cash-multiple</v-icon>
             </v-badge>
+        </v-btn>
+        <v-btn icon v-else>
+            <v-icon>mdi-cash-multiple</v-icon>
         </v-btn>
 
         <v-text-field
@@ -86,13 +89,16 @@
         <!-- Pemisah konten -->
         <v-spacer></v-spacer>
 
-        <v-btn icon>
+        <v-btn icon v-if="counted > 0">
             <v-badge color="orange" overlap>
                 <template v-slot:badge>
-                    <span>3</span>
+                    <span>{{ counted }}</span>
                 </template>
                 <v-icon>mdi-cash-multiple</v-icon>
             </v-badge>
+        </v-btn>
+        <v-btn icon v-else>
+            <v-icon>mdi-cash-multiple</v-icon>
         </v-btn>
 
     </v-app-bar>
@@ -133,6 +139,9 @@
         computed: {
             isHome() {
                 return (this.$route.path==='/' || this.$route.path==='/home')
+            },
+            counted() {
+                return this.$store.getters.getDonationTotalFormGetters
             }
         }
     }
