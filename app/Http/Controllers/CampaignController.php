@@ -83,7 +83,6 @@ class CampaignController extends Controller
             'data' => $data
         ], 200);            
     }
-
     
     public function detail($id)
     {
@@ -94,6 +93,21 @@ class CampaignController extends Controller
         return response()->json([
             'response_code' => '00',
             'response_message' => 'data campaign berhasil ditampilkan',
+            'data' => $data
+        ], 200);            
+    }
+    
+    public function search($keyword)
+    {
+        $campaigns = Campaign::select('*')
+            ->where('title', 'LIKE', '%'.$keyword.'%')
+            ->get();
+
+        $data['campaigns'] = $campaigns;
+          
+        return response()->json([
+            'response_code' => '00',
+            'response_message' => 'data campaigns berhasil ditampilkan',
             'data' => $data
         ], 200);            
     }

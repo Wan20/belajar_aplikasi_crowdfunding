@@ -1,5 +1,11 @@
 <template>
     <v-app>
+    <!-- alert -->
+    <Alert />
+
+    <v-dialog v-model="dialog" fullscreen hide-overlay transition="scale-transition">
+        <Search @closed="closeDialog" />
+    </v-dialog>
     <v-navigation-drawer app v-model="drawer">
         <v-list>
             <v-list-item v-if="!guest">
@@ -58,19 +64,18 @@
         <!-- Pemisah konten -->
         <v-spacer></v-spacer>
 
-        <v-btn icon v-if="counted > 0">
+        <v-btn icon v-if="transactions > 0">
             <v-badge color="orange" overlap>
                 <template v-slot:badge>
-                    <span>{{ counted }}</span>
+                    <span>{{ transactions }}</span>
                 </template>
                 <v-icon>mdi-cash-multiple</v-icon>
             </v-badge>
         </v-btn>
-        <v-btn icon v-else>
-            <v-icon>mdi-cash-multiple</v-icon>
-        </v-btn>
+            <v-icon v-else>mdi-cash-multiple</v-icon>
 
         <v-text-field
+            @click="closeDialog"
             slot="extension"
             hide-details
             append-icon="mdi-microphone"
@@ -78,7 +83,7 @@
             label="Search"
             prepend-inner-icon="mdi-magnify"
             solo-inverted
-            ></v-text-field>
+        ></v-text-field>
     </v-app-bar>
 
     <v-app-bar app color="success" dark v-else>
@@ -89,17 +94,15 @@
         <!-- Pemisah konten -->
         <v-spacer></v-spacer>
 
-        <v-btn icon v-if="counted > 0">
+        <v-btn icon v-if="transactions > 0">
             <v-badge color="orange" overlap>
                 <template v-slot:badge>
-                    <span>{{ counted }}</span>
+                    <span>{{ transactions }}</span>
                 </template>
                 <v-icon>mdi-cash-multiple</v-icon>
             </v-badge>
         </v-btn>
-        <v-btn icon v-else>
-            <v-icon>mdi-cash-multiple</v-icon>
-        </v-btn>
+        <v-icon v-else>mdi-cash-multiple</v-icon>
 
     </v-app-bar>
 
@@ -126,8 +129,13 @@
     </v-app>
 </template>
 <script>
-    export default {
+    import { mapGetters } from 'vuex'
+    export default { 
         name: 'App',
+        components: {
+            Alert : () => import('./components/Alert'),
+            Search : () => import('./components/Search')
+        },
         data: () => ({
             drawer: false,
             menus: [
@@ -135,13 +143,19 @@
                 { title: 'Campaign', icon: 'mdi-hand-heart', route: '/campaigns' },
             ],
             guest: false,
+            dialog: false
         }),
         computed: {
             isHome() {
                 return (this.$route.path==='/' || this.$route.path==='/home')
             },
-            counted() {
-                return this.$store.getters.getDonationTotalFormGetters
+            ...mapGetters({
+                transactions: 'transaction/transactions'
+            })
+        },
+        methods: {
+            closeDialog(value) {
+                this.dialog = value
             }
         }
     }
