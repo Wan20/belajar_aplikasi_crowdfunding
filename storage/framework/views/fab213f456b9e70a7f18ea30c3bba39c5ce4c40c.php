@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="<?php echo e(url('/css/app.css')); ?>"></script>
 </head>
 <body>
-    <h1>Sanbercode</h1>
     <div id="app">
         <app></app>
     </div>

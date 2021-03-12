@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="{{ url('/css/app.css') }}"></script>
 </head>
 <body>
-    <h1>Sanbercode</h1>
     <div id="app">
         <app></app>
     </div>

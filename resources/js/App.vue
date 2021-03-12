@@ -1,24 +1,29 @@
 <template>
     <v-app>
     <!-- alert -->
-    <Alert />
+    <alert />
 
-    <v-dialog v-model="dialog" fullscreen hide-overlay transition="scale-transition">
-        <Search @closed="closeDialog" />
-    </v-dialog>
+    <!-- Agar komponen sebelumnya bisa di cache browser -->
+    <!-- Alasannya karena kita akan membuat komponen dinamis -->
+    <!--  Persistent agar modelnya tidak hilang, bug vuetify -->
+    <keep-alive> 
+        <v-dialog v-model="dialog" fullscreen hide-overlay transition="scale-transition">
+            <component :is="currentComponent" @closed="setDialogStatus"></component>
+        </v-dialog>
+    </keep-alive>
     <v-navigation-drawer app v-model="drawer">
         <v-list>
             <v-list-item v-if="!guest">
                 <v-list-item-avatar>
-                    <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
+                    <v-img :src="user.user.photo_profile"></v-img>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                    <v-list-item-title>Wandy</v-list-item-title>
+                    <v-list-item-title>{{user.user.name}}</v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
             
             <div class="pa-2" v-if="guest">
-                <v-btn block color="primary" class="mb-1">
+                <v-btn block color="primary" class="mb-1" @click="setDialogComponent('login')">
                     <v-icon left>mdi-lock</v-icon>
                     Login
                 </v-btn>
@@ -47,7 +52,7 @@
 
         <template v-slot:append v-if="!guest">
             <div class="pa-2">
-                <v-btn block color="red" dark>
+                <v-btn block color="red" dark @click="logout">
                 <v-icon left>mdi-lock</v-icon>
                     Logout
                 </v-btn>
@@ -75,7 +80,7 @@
             <v-icon v-else>mdi-cash-multiple</v-icon>
 
         <v-text-field
-            @click="closeDialog"
+            @click="setDialogComponent('search')"
             slot="extension"
             hide-details
             append-icon="mdi-microphone"
@@ -129,33 +134,78 @@
     </v-app>
 </template>
 <script>
-    import { mapGetters } from 'vuex'
+    import { mapGetters, mapActions } from 'vuex'
     export default { 
         name: 'App',
         components: {
             Alert : () => import('./components/Alert'),
-            Search : () => import('./components/Search')
+            Search : () => import('./components/Search'),
+            Login : () => import('./components/Login')
         },
         data: () => ({
             drawer: false,
             menus: [
                 { title: 'Home', icon: 'mdi-home', route: '/' },
                 { title: 'Campaign', icon: 'mdi-hand-heart', route: '/campaigns' },
-            ],
-            guest: false,
-            dialog: false
+            ]
         }),
         computed: {
             isHome() {
                 return (this.$route.path==='/' || this.$route.path==='/home')
             },
             ...mapGetters({
-                transactions: 'transaction/transactions'
-            })
+                transactions    : 'transaction/transactions',
+                guest           : 'auth/guest',
+                user            : 'auth/user',
+                dialogStatus    : 'dialog/status',
+                currentComponent: 'dialog/component'
+            }),
+            dialog: {
+                get(){
+                    return this.dialogStatus
+                },
+                set(value) {
+                    this.setDialogStatus(value)
+                }
+            }
         },
         methods: {
-            closeDialog(value) {
-                this.dialog = value
+            ...mapActions({
+                setDialogStatus     : 'dialog/setStatus',
+                setDialogComponent  : 'dialog/setComponent',
+                setAuth             : 'auth/set',
+                setAlert            : 'alert/set',
+                checkToken          : 'auth/checkToken'
+            }),
+            logout() {
+                let config = {
+                    headers: {
+                        'Authorization' : 'Bearer ' + this.user.token,
+                    },
+                }
+                let url = '/api/auth/logout'
+                axios.post(url, {}, config) // tidak butuh form datanya, makanya hanya dikirim {}
+                .then((response) => {
+                    this.setAuth({})
+                    this.setAlert({
+                        status  : true,
+                        color   : 'success',
+                        text    : 'Logout Successfully'
+                    })
+                })
+                .catch((error) => {
+                    let {response} = error.response
+                    this.setAlert({
+                        status  : true,
+                        color   : 'error',
+                        text    : response.message
+                    })
+                })
+            }
+        },
+        mounted() {
+            if(this.user) {
+                this.checkToken(this.user)
             }
         }
     }

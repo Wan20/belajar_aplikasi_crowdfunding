@@ -82,24 +82,35 @@ class ProfileController extends Controller
         }
         
 
-        if ($image = $request->file('image')) {
-            
+        if($request->hasFile('image')) {
             $user = User::where('email', $request->email)->first();
+            
+            $image = $request->file('image');
+            $image_extension = $image->getClientOriginalExtension();
+            $image_name = $user->id . '.' . $image_extension;
 
-            $path = '/photos/users/photo-profile';
-            $imageName = $user->id;
-            $extension = $image->getClientOriginalExtension();
-            $filename = $imageName . '.' . $extension;
+            $image_folder = '/photos/users/photo-profile/';
+            $image_location = $image_folder . $image_name;
+            
+            try {
+                $image->move(public_path($image_folder), $image_name);
 
-            Storage::disk('publicDisk')->put($filename, file_get_contents($image));
+                if (!empty($request->name)) {
+                    $user->username = $request->name;
+                }
+                $user->photo = $image_location;
+                $user->updated_at = Carbon::now();
+                $user->save();
 
-            //store your file into directory and db            
-            $user->photo =  $path . '/' . $filename;
-            if (!empty($request->name)) {
-                $user->username = $request->name;
+            } catch (\Exception $e) {
+                return response([
+                    'response_code' => '01',
+                    'response_message' => 'photo profile gagal upload',
+                    'data' => [
+                        "profile" => new ProfileResource($user)
+                    ]
+                ], 200);
             }
-            $user->updated_at = Carbon::now();
-            $user->save();
                   
             return response()->json([
                 'response_code' => '00',
